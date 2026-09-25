@@ -36,6 +36,25 @@ python spaceinvaders.py
 
 **MacOS Mojave**: You need to use Python 3.7.2 or greater: [Source](https://github.com/pygame/pygame/issues/555)
 
+## Play in the Browser
+
+The game can be compiled to WebAssembly with [pygbag](https://pypi.org/project/pygbag/) and served from a local web server.
+
+```bash
+pip install pygbag
+cd space-invaders
+pygbag --disable-sound-format-error .
+```
+
+Then open [http://localhost:8000](http://localhost:8000) and click the page to start. `main.py` is the browser entry point.
+The first build downloads the pygbag browser runtime, so it needs internet access.
+
+To produce static files you can host anywhere (GitHub Pages, Azure Static Web Apps, etc.), run
+`pygbag --build --disable-sound-format-error .` and deploy the contents of `build/web/`.
+
+**Note:** `--disable-sound-format-error` is needed only because the original `.wav` files are kept for the `.exe`.
+The Python code loads the `.ogg` versions, which browsers support.
+
 ## Demo
 
 [![Space Invaders](http://img.youtube.com/vi/_2yUP3WMDRc/0.jpg)](http://www.youtube.com/watch?v=_2yUP3WMDRc)

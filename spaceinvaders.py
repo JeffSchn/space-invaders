@@ -4,6 +4,7 @@
 # Created by Lee Robinson
 
 from pygame import *
+import asyncio
 import sys
 from os.path import abspath, dirname
 from random import choice
@@ -220,7 +221,7 @@ class Mystery(sprite.Sprite):
         self.moveTime = 25000
         self.direction = 1
         self.timer = time.get_ticks()
-        self.mysteryEntered = mixer.Sound(SOUND_PATH + 'mysteryentered.wav')
+        self.mysteryEntered = mixer.Sound(SOUND_PATH + 'mysteryentered.ogg')
         self.mysteryEntered.set_volume(0.3)
         self.playSound = True
 
@@ -394,10 +395,10 @@ class SpaceInvaders(object):
         for sound_name in ['shoot', 'shoot2', 'invaderkilled', 'mysterykilled',
                            'shipexplosion']:
             self.sounds[sound_name] = mixer.Sound(
-                SOUND_PATH + '{}.wav'.format(sound_name))
+                SOUND_PATH + '{}.ogg'.format(sound_name))
             self.sounds[sound_name].set_volume(0.2)
 
-        self.musicNotes = [mixer.Sound(SOUND_PATH + '{}.wav'.format(i)) for i
+        self.musicNotes = [mixer.Sound(SOUND_PATH + '{}.ogg'.format(i)) for i
                            in range(4)]
         for sound in self.musicNotes:
             sound.set_volume(0.5)
@@ -568,7 +569,7 @@ class SpaceInvaders(object):
             if self.should_exit(e):
                 sys.exit()
 
-    def main(self):
+    async def main(self):
         while True:
             if self.mainScreen:
                 self.screen.blit(self.background, (0, 0))
@@ -637,8 +638,10 @@ class SpaceInvaders(object):
 
             display.update()
             self.clock.tick(60)
+            # Yield to the browser event loop each frame (required by pygbag)
+            await asyncio.sleep(0)
 
 
 if __name__ == '__main__':
     game = SpaceInvaders()
-    game.main()
+    asyncio.run(game.main())
